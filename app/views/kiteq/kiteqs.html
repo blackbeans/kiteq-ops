@@ -1,0 +1,103 @@
+{{template "header.html" .}}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li>实时</li>
+                {{range .aps}}
+                <li><a href="/kiteq?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+                <li>最近一小时</li>
+                {{range .aps}}
+                <li><a href="/kiteq/minutechart?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+                <li>最近2天</li>
+                {{range .aps}}
+                <li><a href="/kiteq/hourchart?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <table class="table table-bordered">
+                <tr>
+                    <td colspan="2"> <h3>KiteQServer({{.apName}})</h3></td>
+                </tr>
+                <tr>
+                    <th>包名称</th>
+                    <th>实时值</th>
+                </tr>
+
+                <tr>
+                    <td>系统当前协程数</td>
+                    <td>{{.stats.KiteQ.Goroutine}}</td>
+                </tr>
+                    <tr>
+                    <td>投递协程数</td>
+                    <td>{{.stats.KiteQ.DeliverGo}}</td>
+                </tr>
+                <tr>
+                    <td>投递消息数量</td>
+                    <td>{{.stats.KiteQ.DeliverCount}}</td>
+                </tr>
+                 <tr>
+                    <td>消息总数量</td>
+                    <td>{{.stats.KiteQ.MessageCount}}</td>
+                </tr>
+                <tr><td colspan=2><h3>TOPIC消息量</h3></td></tr>
+                {{range $k,$v :=.stats.KiteQ.Topics}}  
+                </tr>
+                    <tr>
+                    <td>{{$k}}</td>
+                    <td>{{$v}}</td>
+                </tr> 
+               {{end}}  
+                <tr><td colspan=2><h3>订阅分组</h3></td></tr>
+                {{range $k,$v :=.topics2Groups}}  
+                </tr>
+                    <tr>
+                    <td>{{$k}}</td>
+                    <td>{{$v}}</td>
+                </tr> 
+                {{end}}      
+
+            </table>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+         
+            <table class="table table-bordered">
+                 <tr>
+                    <td colspan="3"><h3>NetWork</h3></td>
+                </tr>
+                <tr>
+                    <th>包名称</th>
+                    <th>每分钟包数</th>
+                    <th>当天累积包数</th>
+                </tr>
+               <tr>
+                    <td>网路读 字节数/包数</td>
+                    <td>{{.stats.Network.ReadBytes}}/{{.stats.Network.ReadCount}}</td>
+                   <td>-</td>
+                </tr>
+               <tr>
+                <td>网路写 字节数/包数</td>
+                <td>{{.stats.Network.WriteBytes}}/{{.stats.Network.WriteCount}}</td>
+                <td>-</td>
+                </tr>
+                <tr>
+                    <td>分发协程数</td>
+                    <td>{{.stats.Network.DispatcherGo}}</td>
+                    <td>-</td>
+                </tr>
+                    <tr>
+                    <td>当前连接数</td>
+                    <td>{{.stats.Network.Connections}}</td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{{template "footer.html" .}}

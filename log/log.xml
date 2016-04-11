@@ -1,0 +1,154 @@
+<logging>
+  <filter enabled="true">
+    <tag>stdout</tag>
+    <type>file</type>
+    <property name="filename">/home/logs/kiteq-ops/stdout.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+    <!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) -->
+    <level>INFO</level>
+  </filter>
+  <filter enabled="true">
+    <tag>kiteq_ops_info</tag>
+    <type>file</type>
+    <level>INFO</level>
+    <property name="filename">/home/logs/kiteq-ops/kiteq_ops_info.log</property>
+    <!--
+       %T - Time (15:04:05 MST)
+       %t - Time (15:04)
+       %D - Date (2006/01/02)
+       %d - Date (01/02/06)
+       %L - Level (FNST, FINE, DEBG, TRAC, WARN, EROR, CRIT)
+       %S - Source
+       %M - Message
+       It ignores unknown format strings (and removes them)
+       Recommended: "[%D %T] [%L] (%S) %M"
+    -->
+    <property name="format">[%D %T] [%L] %M</property>
+    <property name="rotate">false</property> <!-- true enables log rotation, otherwise append -->
+    <property name="maxsize">100M</property> <!-- \d+[KMG]? Suffixes are in terms of 2**10 -->
+    <property name="maxlines">10M</property> <!-- \d+[KMG]? Suffixes are in terms of thousands -->
+    <property name="daily">true</property> <!-- Automatically rotates when a log message is written after midnight -->
+  </filter>
+  <filter enabled="true">
+    <tag>kiteq_ops_warn</tag>
+    <type>file</type>
+    <level>WARNING</level>
+    <property name="filename">/home/logs/kiteq-ops/kiteq_ops_warn.log</property>
+    <property name="format">[%D %T] [%L] %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+  <filter enabled="true">
+    <tag>gpsn_error</tag>
+    <type>file</type>
+    <level>ERROR</level>
+    <property name="filename">/home/logs/kiteq-ops/kiteq_ops_error.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+  <filter enabled="true">
+    <tag>zk</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/zk.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+
+   <filter enabled="true">
+    <tag>im_manager</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/im_manager.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+     <filter enabled="true">
+    <tag>app_db</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/app_db.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+    <filter enabled="true">
+    <tag>ops_controller</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/ops_controller.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+      <filter enabled="true">
+    <tag>im_manager</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/im_manager.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+  <filter enabled="true">
+    <tag>kiteq_manager</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/kiteq_manager.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+  <filter enabled="true">
+    <tag>app_db</tag>
+    <type>file</type>
+    <level>DEBUG</level>
+    <property name="filename">/home/logs/kiteq-ops/app_db.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+ <filter enabled="true">
+    <tag>alarm</tag>
+    <type>file</type>
+    <level>INFO</level>
+    <property name="filename">/home/logs/kiteq-ops/alarm.log</property>
+    <property name="format">[%D %T] [%L] (%S) %M</property>
+    <property name="rotate">false</property>
+    <property name="maxsize">100M</property>
+    <property name="maxlines">10M</property>
+    <property name="daily">true</property> 
+  </filter>
+
+</logging>

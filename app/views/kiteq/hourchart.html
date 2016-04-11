@@ -1,0 +1,63 @@
+{{template "header.html" .}}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li>实时</li>
+                {{range .aps}}
+                <li><a href="/kiteq?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+                <li>最近一小时</li>
+                {{range .aps}}
+                <li><a href="/kiteq/minutechart?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+                <li>最近2天</li>
+                {{range .aps}}
+                <li><a href="/kiteq/hourchart?apName={{.HostPort}}">{{.HostPort}}</a>
+                </li>
+                {{end}}
+            </ul>
+        </div>
+
+       
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {{range $key,$value := .cmdType}}
+            <div id="container_{{$key}}" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+           {{end}}
+        </div>
+  
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        {{range $key,$value := .cmdType}}
+            var config = {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: '{{$value}}-最近2天'
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                title: {
+                    text: 'Count'
+                }
+            },
+            series: [
+            ]
+        };
+
+        var raw_categories= "{{index $.categories $value}}";
+        var raw_series = "{{index $.series $value}}";
+        config.xAxis.categories = JSON.parse(raw_categories);
+        config.series = JSON.parse(raw_series);
+        $('#container_{{$key}}').highcharts(config);
+        {{end}}
+    });
+</script>
+{{template "footer.html" .}}
