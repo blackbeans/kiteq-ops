@@ -10,8 +10,9 @@
     revel run kiteq-ops
 
 #### demo
-     ![image](./doc/home.png)
 
-     ![image](./doc/hours.png)
+![image](./doc/home.png)
 
-     ![image](./doc/days.png)
+![image](./doc/hours.png)
+
+![image](./doc/days.png)
