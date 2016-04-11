@@ -8,8 +8,6 @@ import (
 	controllers0 "github.com/revel/modules/jobs/app/controllers"
 	_ "github.com/revel/modules/jobs/app/jobs"
 	controllers1 "github.com/revel/modules/static/app/controllers"
-	_ "github.com/revel/modules/testrunner/app"
-	controllers2 "github.com/revel/modules/testrunner/app/controllers"
 	_ "kiteq-ops/app"
 	controllers "kiteq-ops/app/controllers"
 	"github.com/revel/revel/testing"
@@ -29,6 +27,20 @@ func main() {
 	flag.Parse()
 	revel.Init(*runMode, *importPath, *srcPath)
 	revel.INFO.Println("Running revel server")
+	
+	revel.RegisterController((*controllers.Home)(nil),
+		[]*revel.MethodType{
+			&revel.MethodType{
+				Name: "Index",
+				Args: []*revel.MethodArg{ 
+				},
+				RenderArgNames: map[int][]string{ 
+					12: []string{ 
+					},
+				},
+			},
+			
+		})
 	
 	revel.RegisterController((*controllers.KiteQ)(nil),
 		[]*revel.MethodType{
@@ -74,20 +86,6 @@ func main() {
 			
 		})
 	
-	revel.RegisterController((*controllers.Home)(nil),
-		[]*revel.MethodType{
-			&revel.MethodType{
-				Name: "Index",
-				Args: []*revel.MethodArg{ 
-				},
-				RenderArgNames: map[int][]string{ 
-					12: []string{ 
-					},
-				},
-			},
-			
-		})
-	
 	revel.RegisterController((*controllers0.Jobs)(nil),
 		[]*revel.MethodType{
 			&revel.MethodType{
@@ -120,39 +118,6 @@ func main() {
 					&revel.MethodArg{Name: "moduleName", Type: reflect.TypeOf((*string)(nil)) },
 					&revel.MethodArg{Name: "prefix", Type: reflect.TypeOf((*string)(nil)) },
 					&revel.MethodArg{Name: "filepath", Type: reflect.TypeOf((*string)(nil)) },
-				},
-				RenderArgNames: map[int][]string{ 
-				},
-			},
-			
-		})
-	
-	revel.RegisterController((*controllers2.TestRunner)(nil),
-		[]*revel.MethodType{
-			&revel.MethodType{
-				Name: "Index",
-				Args: []*revel.MethodArg{ 
-				},
-				RenderArgNames: map[int][]string{ 
-					70: []string{ 
-						"testSuites",
-					},
-				},
-			},
-			&revel.MethodType{
-				Name: "Run",
-				Args: []*revel.MethodArg{ 
-					&revel.MethodArg{Name: "suite", Type: reflect.TypeOf((*string)(nil)) },
-					&revel.MethodArg{Name: "test", Type: reflect.TypeOf((*string)(nil)) },
-				},
-				RenderArgNames: map[int][]string{ 
-					107: []string{ 
-					},
-				},
-			},
-			&revel.MethodType{
-				Name: "List",
-				Args: []*revel.MethodArg{ 
 				},
 				RenderArgNames: map[int][]string{ 
 				},
