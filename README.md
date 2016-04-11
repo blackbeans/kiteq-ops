@@ -1,7 +1,7 @@
 # kiteq-ops
 
 #### 简介
-    - 提供kiteq的系统指标的图标展示
+    - 提供[kiteq](https://github.com/blackbeans/kiteq)的系统指标的图标展示
     - 节点存活
     - kiteq系统指标告警(需要对接自己的告警平台)
     
