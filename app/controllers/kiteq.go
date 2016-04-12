@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"bibi-ops/app/routes"
+	"encoding/json"
+	log "github.com/blackbeans/log4go"
+	"github.com/revel/revel"
 	"kiteq-ops/app/models"
 	"kiteq-ops/app/models/alarm"
 	"kiteq-ops/app/models/kiteq"
 	"kiteq-ops/app/zk"
-	"encoding/json"
-	log "github.com/blackbeans/log4go"
-	"github.com/revel/revel"
 	"sort"
 	"time"
 )
@@ -29,10 +30,17 @@ func (c KiteQ) Kiteqs(apName string) revel.Result {
 		apName = currAp.HostPort
 	}
 
-	log.Debug("KiteQMonitor|Kiteqs|%s", currAp)
+	log.Debug("KiteQ|Kiteqs|%s", currAp)
 	stats := kiteqManager.QueryNodeConfig(apName)
 	topics2Groups := kiteqManager.QueryTopic2Groups(apName)
 	return c.Render(apName, stats, aps, apName, topics2Groups)
+}
+
+func (c KiteQ) DelSubscribe(apName string, group string, topic string) revel.Result {
+	//delete subscribe
+	kiteqManager.DelSubscribe(topic, group)
+	log.Debug("KiteQ|DelSubscribe|%s|%s", topic, group)
+	return c.Redirect(routes.KiteQ.Kiteqs(apName))
 }
 
 func (c KiteQ) MinuteChart(apName string, end string) revel.Result {

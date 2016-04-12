@@ -5,6 +5,7 @@ module:jobs
 
 GET 	/                           			KiteQ.Kiteqs
 GET 	/kiteq                           		KiteQ.Kiteqs
+GET 	/kiteq/delsub                           KiteQ.DelSubscribe
 
 
 

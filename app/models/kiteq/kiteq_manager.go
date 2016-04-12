@@ -1,10 +1,10 @@
 package kiteq
 
 import (
-	"kiteq-ops/app/models/alarm"
-	"kiteq-ops/app/zk"
 	"encoding/json"
 	log "github.com/blackbeans/log4go"
+	"kiteq-ops/app/models/alarm"
+	"kiteq-ops/app/zk"
 	"sort"
 	"strconv"
 	"strings"
@@ -15,6 +15,7 @@ const (
 	KITEQ               = "/kiteq"
 	KITEQ_ALL_SERVERS   = KITEQ + "/all_servers"
 	KITEQ_ALIVE_SERVERS = KITEQ + "/alive_servers"
+	KITEQ_SUB           = KITEQ + "/sub" // 持久订阅/或者临时订阅 # /kiteq/sub/${topic}/${groupId}-bind/#$data(bind)
 )
 
 /**
@@ -96,6 +97,19 @@ func (self *KiteQManager) QueryNodes() []KiteQ {
 }
 
 /*
+* 删除订阅关系
+ */
+func (self *KiteQManager) DelSubscribe(topic, group string) bool {
+	subPath := KITEQ_SUB + "/" + topic + "/" + group + "-bind"
+	var err error
+	if err = self.zkSession.DelNode(subPath); nil != err {
+		log.ErrorLog("kiteq_manager", "KiteQManager|DelSubscribe|%s|%s", subPath, err)
+		return false
+	}
+	return true
+}
+
+/*
 *查询该节点下的kiteq状态
  */
 func (self *KiteQManager) QueryNodeConfig(hostport string) *KiteqMonitorEntity {
@@ -138,6 +152,9 @@ func (self *KiteQManager) QueryTopic2Groups(hostport string) map[string][]string
 	if nil != err {
 		log.ErrorLog("kiteq_manager", "KiteQManager|QueryTopic2Groups|Unmarshal|FAIL|%s", err)
 		return nil
+	}
+	for _, v := range entry {
+		sort.Strings(v)
 	}
 	return entry
 }

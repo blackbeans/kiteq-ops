@@ -29,6 +29,19 @@ func (_ tKiteQ) Kiteqs(
 	return revel.MainRouter.Reverse("KiteQ.Kiteqs", args).Url
 }
 
+func (_ tKiteQ) DelSubscribe(
+		apName string,
+		group string,
+		topic string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "apName", apName)
+	revel.Unbind(args, "group", group)
+	revel.Unbind(args, "topic", topic)
+	return revel.MainRouter.Reverse("KiteQ.DelSubscribe", args).Url
+}
+
 func (_ tKiteQ) MinuteChart(
 		apName string,
 		end string,
@@ -90,6 +103,36 @@ func (_ tStatic) ServeModule(
 	revel.Unbind(args, "prefix", prefix)
 	revel.Unbind(args, "filepath", filepath)
 	return revel.MainRouter.Reverse("Static.ServeModule", args).Url
+}
+
+
+type tTestRunner struct {}
+var TestRunner tTestRunner
+
+
+func (_ tTestRunner) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
+}
+
+func (_ tTestRunner) Run(
+		suite string,
+		test string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "suite", suite)
+	revel.Unbind(args, "test", test)
+	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
+}
+
+func (_ tTestRunner) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.List", args).Url
 }
 
 

@@ -54,14 +54,22 @@
                     <td>{{$v}}</td>
                 </tr> 
                {{end}}  
-                <tr><td colspan=2><h3>订阅分组</h3></td></tr>
+                    <tr><td colspan=2><h3>订阅分组</h3></td></tr>
                 {{range $k,$v :=.topics2Groups}}  
                 </tr>
                     <tr>
                     <td>{{$k}}</td>
-                    <td>{{$v}}</td>
-                </tr> 
-                {{end}}      
+                    <td>
+                        <table>
+                            {{range $v}}
+                            <tr>
+                                <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td>
+                            </tr>
+                            {{end}}
+                        </table>
+                    </td>
+                    </tr> 
+                {{end}}       
 
             </table>
         </div>

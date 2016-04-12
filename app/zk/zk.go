@@ -222,6 +222,21 @@ func (self *ZkSession) PullNodesAndWatch(path string) ([]string, error) {
 	return children, err
 }
 
+//删除节点
+func (self *ZkSession) DelNode(path string) error {
+	exist, _, err := self.conn.Exists(path)
+	if nil != err {
+		self.conn.Close()
+		return err
+	}
+
+	if exist {
+		//先尝试创建一下
+		return self.conn.Delete(path, -1)
+	}
+	return nil
+}
+
 /*
 *
 *获取目录下的数据并且监听
