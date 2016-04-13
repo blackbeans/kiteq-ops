@@ -4,6 +4,18 @@ package routes
 import "github.com/revel/revel"
 
 
+type tHome struct {}
+var Home tHome
+
+
+func (_ tHome) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Home.Index", args).Url
+}
+
+
 type tKiteQ struct {}
 var KiteQ tKiteQ
 
@@ -53,45 +65,15 @@ func (_ tKiteQ) HourChart(
 }
 
 
-type tHome struct {}
-var Home tHome
+type tJobs struct {}
+var Jobs tJobs
 
 
-func (_ tHome) Index(
+func (_ tJobs) Status(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Home.Index", args).Url
-}
-
-
-type tTestRunner struct {}
-var TestRunner tTestRunner
-
-
-func (_ tTestRunner) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
-}
-
-func (_ tTestRunner) Run(
-		suite string,
-		test string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "suite", suite)
-	revel.Unbind(args, "test", test)
-	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
-}
-
-func (_ tTestRunner) List(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("TestRunner.List", args).Url
+	return revel.MainRouter.Reverse("Jobs.Status", args).Url
 }
 
 
@@ -124,15 +106,33 @@ func (_ tStatic) ServeModule(
 }
 
 
-type tJobs struct {}
-var Jobs tJobs
+type tTestRunner struct {}
+var TestRunner tTestRunner
 
 
-func (_ tJobs) Status(
+func (_ tTestRunner) Index(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Jobs.Status", args).Url
+	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
+}
+
+func (_ tTestRunner) Run(
+		suite string,
+		test string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "suite", suite)
+	revel.Unbind(args, "test", test)
+	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
+}
+
+func (_ tTestRunner) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.List", args).Url
 }
 
 

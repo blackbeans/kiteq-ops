@@ -60,12 +60,14 @@
                 <tr>
                     <td>{{$k}}</td>
                     <td>
-                        <table>
+                        <table width="100%">
                             {{range $v}}
                             <tr>
                                 <!-- <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td> -->
                                        <!-- 删除确认框 -->
-                                <td>{{.}}&nbsp;&nbsp;<button class="btn btn-danger btn-primary" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.}}_{{$k}}">删除</button></td>
+                                <td width="30%">{{.}}</td>
+                                <td><button> class="btn btn-danger" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.}}_{{$k}}">删除</button>
+                                </td>
                                 <!-- 模态框（Modal） -->
                                 <div class="modal fade" id="myModal_{{.}}_{{$k}}" tabindex="-1" role="dialog" 
                                    aria-labelledby="myModalLabel" aria-hidden="true">
