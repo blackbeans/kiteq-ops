@@ -65,18 +65,6 @@ func (_ tKiteQ) HourChart(
 }
 
 
-type tJobs struct {}
-var Jobs tJobs
-
-
-func (_ tJobs) Status(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("Jobs.Status", args).Url
-}
-
-
 type tStatic struct {}
 var Static tStatic
 
@@ -133,6 +121,18 @@ func (_ tTestRunner) List(
 	args := make(map[string]string)
 	
 	return revel.MainRouter.Reverse("TestRunner.List", args).Url
+}
+
+
+type tJobs struct {}
+var Jobs tJobs
+
+
+func (_ tJobs) Status(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Jobs.Status", args).Url
 }
 
 
