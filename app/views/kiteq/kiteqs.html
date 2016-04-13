@@ -54,23 +54,55 @@
                     <td>{{$v}}</td>
                 </tr> 
                {{end}}  
-                    <tr><td colspan=2><h3>订阅分组</h3></td></tr>
+               <tr><td colspan=2><h3>订阅分组</h3></td></tr>
                 {{range $k,$v :=.topics2Groups}}  
                 </tr>
-                    <tr>
+                <tr>
                     <td>{{$k}}</td>
                     <td>
                         <table>
                             {{range $v}}
                             <tr>
-                                <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td>
+                                <!-- <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td> -->
+                                       <!-- 删除确认框 -->
+                                <td>{{.}}&nbsp;&nbsp;<button class="btn btn-danger btn-primary" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.}}_{{$k}}">删除</button></td>
+                                <!-- 模态框（Modal） -->
+                                <div class="modal fade" id="myModal_{{.}}_{{$k}}" tabindex="-1" role="dialog" 
+                                   aria-labelledby="myModalLabel" aria-hidden="true">
+                                   <div class="modal-dialog">
+                                      <div class="modal-content">
+                                         <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" 
+                                               aria-hidden="true">×
+                                            </button>
+                                            <h4 class="modal-title" id="myModalLabel">
+                                               是否要删除该订阅分组?
+                                            </h4>
+                                         </div>
+                                          <div class="modal-body">
+                                            Topic={{$k}}<br>
+                                            GroupId={{.}}
+                                          </div>
+                                         <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" 
+                                               data-dismiss="modal">关闭
+                                            </button>
+                                            <a class="btn btn-danger btn-ok">确认</a>
+                                         </div>
+                                      </div><!-- /.modal-content -->
+                                   </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                                <script type="text/javascript">
+                                    $('#myModal_{{.}}_{{$k}}').on('show.bs.modal', function(e) {
+                                        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                                    });
+                                </script>
                             </tr>
                             {{end}}
                         </table>
                     </td>
-                    </tr> 
+                </tr> 
                 {{end}}       
-
             </table>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
