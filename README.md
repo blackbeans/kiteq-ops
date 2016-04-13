@@ -15,7 +15,9 @@
 
 #### demo
 
-![image](./doc/home.png)
+![image](./doc/home_1.png)
+
+![image](./doc/home_2.png)
 
 ![image](./doc/hours.png)
 
