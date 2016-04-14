@@ -63,7 +63,7 @@ func queryFromMongo(table, server string, startTime, endTime time.Time) ([]Recor
 func formatRecords(startTime, endTime time.Time, records []Record) map[string][]IndexDatas {
 
 	commands := make(map[string][]IndexDatas)
-	series := []string{"kiteq", "connections", "network", "delay_message", "delivery_message"}
+	series := []string{"kiteq", "kiteq_connections", "network", "kiteq_message_delay", "kiteq_message_deliver", "kiteq_message_recieve"}
 	for _, s := range series {
 		commands[s] = make([]IndexDatas, 0)
 	}
@@ -80,29 +80,29 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 
 		//延迟消息
 		for t, v := range record.Items.DelayMessage {
-			values, ok := delayx["delay_"+t]
+			values, ok := delayx[t]
 			if !ok {
 				values = make([]IndexData, 0, 2)
 			}
-			delayx["delay_"+t] = append(values, IndexData{v, record.Timestamp, false})
+			delayx[t] = append(values, IndexData{v, record.Timestamp, false})
 		}
 
 		//投递消息
 		for t, v := range record.Items.TopicsDeliver {
-			values, ok := deliveryx["message_deliver_"+t]
+			values, ok := deliveryx[t]
 			if !ok {
 				values = make([]IndexData, 0, 2)
 			}
-			deliveryx["message_deliver_"+t] = append(values, IndexData{v, record.Timestamp, false})
+			deliveryx[t] = append(values, IndexData{v, record.Timestamp, false})
 		}
 
 		//接收消息
 		for t, v := range record.Items.TopicsRecieve {
-			values, ok := recievex["message_recieve_"+t]
+			values, ok := recievex[t]
 			if !ok {
 				values = make([]IndexData, 0, 2)
 			}
-			recievex["message_recieve_"+t] = append(values, IndexData{v, record.Timestamp, false})
+			recievex[t] = append(values, IndexData{v, record.Timestamp, false})
 		}
 
 		//网络的参数
@@ -163,28 +163,28 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 
 		pseries = append(pseries, s)
 	}
-	commands["delay_message"] = pseries
+	commands["kiteq_message_delay"] = pseries
 
 	pseries = make([]IndexDatas, 0, 2)
 	for k, v := range deliveryx {
 		s := IndexDatas{k, v}
 		pseries = append(pseries, s)
 	}
-	commands["deliver_message"] = pseries
+	commands["kiteq_message_deliver"] = pseries
 
 	pseries = make([]IndexDatas, 0, 2)
 	for k, v := range recievex {
 		s := IndexDatas{k, v}
 		pseries = append(pseries, s)
 	}
-	commands["recieve_message"] = pseries
+	commands["kiteq_message_recieve"] = pseries
 
 	pseries = make([]IndexDatas, 0, 2)
 	for k, v := range connx {
 		s := IndexDatas{k, v}
 		pseries = append(pseries, s)
 	}
-	commands["connections"] = pseries
+	commands["kiteq_connections"] = pseries
 	log.Info("KiteQ|formatRecords|%s", commands)
 	return commands
 }
