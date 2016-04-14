@@ -1,10 +1,10 @@
 package kiteq
 
 import (
-	"kiteq-ops/app/models"
 	"fmt"
 	log "github.com/blackbeans/log4go"
 	"gopkg.in/mgo.v2/bson"
+	"kiteq-ops/app/models"
 	"time"
 )
 
@@ -72,6 +72,7 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 	networkx := make(map[string][]IndexData)
 	delayx := make(map[string][]IndexData)
 	deliveryx := make(map[string][]IndexData)
+	recievex := make(map[string][]IndexData)
 	connx := make(map[string][]IndexData)
 
 	//初始化所有的命令
@@ -87,12 +88,21 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 		}
 
 		//投递消息
-		for t, v := range record.Items.DeliveryMessage {
-			values, ok := deliveryx["message_"+t]
+		for t, v := range record.Items.TopicsDeliver {
+			values, ok := deliveryx["message_deliver_"+t]
 			if !ok {
 				values = make([]IndexData, 0, 2)
 			}
-			deliveryx["message_"+t] = append(values, IndexData{v, record.Timestamp, false})
+			deliveryx["message_deliver_"+t] = append(values, IndexData{v, record.Timestamp, false})
+		}
+
+		//接收消息
+		for t, v := range record.Items.TopicsRecieve {
+			values, ok := recievex["message_recieve_"+t]
+			if !ok {
+				values = make([]IndexData, 0, 2)
+			}
+			recievex["message_recieve_"+t] = append(values, IndexData{v, record.Timestamp, false})
 		}
 
 		//网络的参数
@@ -119,7 +129,7 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 		connx["connections"] = append(v, IndexData{record.Items.Network.Connections, record.Timestamp, false})
 
 		//kiteq的参数
-		index = []string{"goroutine", "deliver_go", "deliver_count"}
+		index = []string{"goroutine", "deliver_go", "deliver_count", "recieve_count"}
 		for _, v := range index {
 			values, ok := kiteqx[v]
 			if !ok {
@@ -130,6 +140,7 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 		kiteqx["goroutine"] = append(kiteqx["goroutine"], IndexData{record.Items.KiteQ.Goroutine, record.Timestamp, false})
 		kiteqx["deliver_go"] = append(kiteqx["deliver_go"], IndexData{record.Items.KiteQ.DeliverGo, record.Timestamp, false})
 		kiteqx["deliver_count"] = append(kiteqx["deliver_count"], IndexData{record.Items.KiteQ.DeliverCount, record.Timestamp, false})
+		kiteqx["recieve_count"] = append(kiteqx["recieve_count"], IndexData{record.Items.KiteQ.RecieveCount, record.Timestamp, false})
 
 	}
 	pseries := make([]IndexDatas, 0, 2)
@@ -159,7 +170,14 @@ func formatRecords(startTime, endTime time.Time, records []Record) map[string][]
 		s := IndexDatas{k, v}
 		pseries = append(pseries, s)
 	}
-	commands["delivery_message"] = pseries
+	commands["deliver_message"] = pseries
+
+	pseries = make([]IndexDatas, 0, 2)
+	for k, v := range recievex {
+		s := IndexDatas{k, v}
+		pseries = append(pseries, s)
+	}
+	commands["recieve_message"] = pseries
 
 	pseries = make([]IndexDatas, 0, 2)
 	for k, v := range connx {

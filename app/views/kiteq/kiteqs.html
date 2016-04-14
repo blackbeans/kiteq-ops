@@ -39,7 +39,11 @@
                     <td>{{.stats.KiteQ.DeliverGo}}</td>
                 </tr>
                 <tr>
-                    <td>投递消息数量</td>
+                    <td>接收消息总数量(秒)</td>
+                    <td>{{.stats.KiteQ.DeliverCount}}</td>
+                </tr>
+                <tr>
+                    <td>投递消息总数量(秒)</td>
                     <td>{{.stats.KiteQ.DeliverCount}}</td>
                 </tr>
                  <tr>
@@ -51,15 +55,25 @@
                      <td>{{$v}}</td>
                  </tr> 
                 {{end}}
-                <tr>
-                <td colspan=2><h3>投递速度(秒)</h3></td>
+                 <tr>
+                <td colspan=2><h3>Topic接收速度(秒)</h3></td>
                 </tr>
-                {{range $k,$v :=.stats.KiteQ.Topics}}  
+                {{range $k,$v :=.stats.KiteQ.TopicsDeliver}}  
                 <tr>
                     <td>{{$k}}</td>
-                    <td>{{$v}}</td>
+                     <td>{{$v}}/s</td>
+                </tr> 
+               {{end}} 
+                <tr>
+                <td colspan=2><h3>Topic投递速度(秒)</h3></td>
+                </tr>
+                {{range $k,$v :=.stats.KiteQ.TopicsDeliver}}  
+                <tr>
+                    <td>{{$k}}</td>
+                    <td>{{$v}}/s</td>
                 </tr> 
                {{end}}  
+               
                <tr><td colspan=2><h3>订阅分组</h3></td></tr>
                 {{range $k,$v :=.topics2Groups}}  
                 </tr>
