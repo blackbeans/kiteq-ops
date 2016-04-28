@@ -84,12 +84,13 @@
                             {{range $v}}
                             <tr>
                                 <!-- <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td> -->
+         
                                        <!-- 删除确认框 -->
-                                <td width="30%">{{.}}</td>
-                                <td><button class="btn btn-danger" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.}}_{{$k}}">删除</button>
-                                </td>
+                                <td width="30%">{{.GroupId}}<div class="progress" style="height: 30px;"><div  class="progress-bar progress-bar-success" style="width:{{.Percent}}%" >{{index .Limiter 0}}/{{index .Limiter 1}}</div></div></td>
+                                <td><div style="height: 30px;margin-bottom: 20px;margin-left:20px"><button class="btn btn-danger "  style="height: 30px;" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.GroupId}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.GroupId}}_{{$k}}">删除</button>
+                                </div></td>
                                 <!-- 模态框（Modal） -->
-                                <div class="modal fade" id="myModal_{{.}}_{{$k}}" tabindex="-1" role="dialog" 
+                                <div class="modal fade" id="myModal_{{.GroupId}}_{{$k}}" tabindex="-1" role="dialog" 
                                    aria-labelledby="myModalLabel" aria-hidden="true">
                                    <div class="modal-dialog">
                                       <div class="modal-content">
@@ -103,7 +104,7 @@
                                          </div>
                                           <div class="modal-body">
                                             Topic={{$k}}<br>
-                                            GroupId={{.}}
+                                            GroupId={{.GroupId}}
                                           </div>
                                          <div class="modal-footer">
                                             <button type="button" class="btn btn-default" 
@@ -115,7 +116,7 @@
                                    </div><!-- /.modal-dialog -->
                                 </div><!-- /.modal -->
                                 <script type="text/javascript">
-                                    $('#myModal_{{.}}_{{$k}}').on('show.bs.modal', function(e) {
+                                    $('#myModal_{{.GroupId}}_{{$k}}').on('show.bs.modal', function(e) {
                                         $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
                                     });
                                 </script>

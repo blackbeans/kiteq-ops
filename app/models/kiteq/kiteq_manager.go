@@ -133,10 +133,21 @@ func (self *KiteQManager) QueryNodeConfig(hostport string) *KiteqMonitorEntity {
 	return WrapKiteqMonitorEntity(entry)
 }
 
+type BindInfo struct {
+	Topic2Groups    map[string][]string         `json:"topic_2_groups"`
+	Topics2Limiters map[string]map[string][]int `json:"topic_limiters"`
+}
+
+type BindGroup struct {
+	GroupId string `json:"group"`
+	Limiter []int  `json:"limiter"`
+	Percent int    `json:"percent"`
+}
+
 /*
 *查询该节点下的kiteq状态
  */
-func (self *KiteQManager) QueryTopic2Groups(hostport string) map[string][]string {
+func (self *KiteQManager) QueryTopic2Groups(hostport string) map[string][]BindGroup {
 
 	self.lockAp.RLock()
 	defer self.lockAp.RUnlock()
@@ -147,16 +158,25 @@ func (self *KiteQManager) QueryTopic2Groups(hostport string) map[string][]string
 	url := "http://" + split[0] + ":" + portStr + "/binds"
 	json_byte := query(url)
 	log.InfoLog("kiteq_manager", "KiteQManager|QueryTopic2Groups|SUCC|%s", string(json_byte))
-	var entry map[string][]string
+	var entry BindInfo
 	err := json.Unmarshal(json_byte, &entry)
 	if nil != err {
 		log.ErrorLog("kiteq_manager", "KiteQManager|QueryTopic2Groups|Unmarshal|FAIL|%s", err)
 		return nil
 	}
-	for _, v := range entry {
+	for _, v := range entry.Topic2Groups {
 		sort.Strings(v)
 	}
-	return entry
+
+	bg := make(map[string][]BindGroup, 10)
+	for t, gs := range entry.Topic2Groups {
+		bg[t] = make([]BindGroup, 0, 10)
+		for _, g := range gs {
+			limiter := entry.Topics2Limiters[t][g]
+			bg[t] = append(bg[t], BindGroup{g, limiter, (limiter[0] * 100 / limiter[1])})
+		}
+	}
+	return bg
 }
 
 func (self *KiteQManager) OnSessionExpired() {
