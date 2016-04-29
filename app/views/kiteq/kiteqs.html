@@ -29,7 +29,12 @@
                     <th>包名称</th>
                     <th>实时值</th>
                 </tr>
-
+                 <tr>
+                    <td>系统流量</td>
+                    <td><div class="progress" style="height: 30px;">
+                        <div  class="progress-bar progress-bar-success" style="width: {{.stats.LimterPercent}}%" >
+                            {{index .stats.KiteQ.KiteServerLimter 0}}/{{index .stats.KiteQ.KiteServerLimter 1}}</div></div></td>
+                </tr>
                 <tr>
                     <td>系统当前协程数</td>
                     <td>{{.stats.KiteQ.Goroutine}}</td>
@@ -40,7 +45,7 @@
                 </tr>
                 <tr>
                     <td>接收消息总数量(秒)</td>
-                    <td>{{.stats.KiteQ.DeliverCount}}</td>
+                    <td>{{.stats.KiteQ.RecieveCount}}</td>
                 </tr>
                 <tr>
                     <td>投递消息总数量(秒)</td>
@@ -58,7 +63,7 @@
                  <tr>
                 <td colspan=2><h3>Topic接收速度(秒)</h3></td>
                 </tr>
-                {{range $k,$v :=.stats.KiteQ.TopicsDeliver}}  
+                {{range $k,$v :=.stats.KiteQ.TopicsRecieve}}  
                 <tr>
                     <td>{{$k}}</td>
                      <td>{{$v}}/s</td>

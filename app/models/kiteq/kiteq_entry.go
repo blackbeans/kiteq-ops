@@ -31,14 +31,15 @@ func (s KiteQs) Less(i, j int) bool {
 
 //kiteq
 type KiteQStat struct {
-	Goroutine     int32                         `json:"goroutine"`
-	DeliverGo     int32                         `json:"deliver_go"`
-	DeliverCount  int32                         `json:"deliver_count"`
-	RecieveCount  int32                         `json:"recieve_count"`
-	MessageCount  map[string]int32              `json:"message_count"`  //堆积消息数
-	TopicsDeliver map[string] /*topicId*/ int32 `json:"topics_deliver"` //实时的消息处理数量
-	TopicsRecieve map[string] /*topicId*/ int32 `json:"topics_recieve"` //实时的消息处理数量
-	Groups        map[string][]string           `json:"groups"`
+	Goroutine        int32                         `json:"goroutine"`
+	DeliverGo        int32                         `json:"deliver_go"`
+	DeliverCount     int32                         `json:"deliver_count"`
+	RecieveCount     int32                         `json:"recieve_count"`
+	MessageCount     map[string]int32              `json:"message_count"`  //堆积消息数
+	TopicsDeliver    map[string] /*topicId*/ int32 `json:"topics_deliver"` //实时的消息处理数量
+	TopicsRecieve    map[string] /*topicId*/ int32 `json:"topics_recieve"` //实时的消息处理数量
+	Groups           map[string][]string           `json:"groups"`
+	KiteServerLimter []int                         `json:"accpet_limiter,omitemtpy"`
 }
 
 //network stat
@@ -57,17 +58,20 @@ type KiteqMonitor struct {
 }
 
 type KiteqMonitorEntity struct {
-	KiteQ         KiteQStat                     `json:"kiteq"`
-	Network       NetworkStat                   `json:"network"`
-	DelayMessage  map[string]int32              `json:"delay_message,omiempty"`  //堆积消息数
-	TopicsDeliver map[string] /*topicId*/ int32 `json:"topics_deliver,omiempty"` //实时的消息处理数量
-	TopicsRecieve map[string] /*topicId*/ int32 `json:"topics_recieve,omiempty"` //实时的消息处理数量
-	Groups        map[string][]string           `json:"groups,omitemtpy"`        //实时的消息处理数量
+	KiteQ            KiteQStat                     `json:"kiteq"`
+	Network          NetworkStat                   `json:"network"`
+	DelayMessage     map[string]int32              `json:"delay_message,omiempty"`  //堆积消息数
+	TopicsDeliver    map[string] /*topicId*/ int32 `json:"topics_deliver,omiempty"` //实时的消息处理数量
+	TopicsRecieve    map[string] /*topicId*/ int32 `json:"topics_recieve,omiempty"` //实时的消息处理数量
+	Groups           map[string][]string           `json:"groups,omitemtpy"`        //实时的消息处理数量
+	KiteServerLimter []int                         `json:"accpet_limiter,omiempty"`
+	LimterPercent    int                           `json:"-"`
 }
 
 func WrapKiteqMonitorEntity(monitor KiteqMonitor) *KiteqMonitorEntity {
+	percent := monitor.KiteQ.KiteServerLimter[0] * 100 / monitor.KiteQ.KiteServerLimter[1]
 	return &KiteqMonitorEntity{monitor.KiteQ, monitor.Network, monitor.KiteQ.MessageCount,
-		monitor.KiteQ.TopicsDeliver, monitor.KiteQ.TopicsRecieve, monitor.KiteQ.Groups}
+		monitor.KiteQ.TopicsDeliver, monitor.KiteQ.TopicsRecieve, monitor.KiteQ.Groups, monitor.KiteQ.KiteServerLimter, percent}
 }
 
 func query(url string) []byte {
