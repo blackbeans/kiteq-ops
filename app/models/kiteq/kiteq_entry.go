@@ -64,7 +64,7 @@ type KiteqMonitorEntity struct {
 	TopicsDeliver    map[string] /*topicId*/ int32 `json:"topics_deliver,omiempty"` //实时的消息处理数量
 	TopicsRecieve    map[string] /*topicId*/ int32 `json:"topics_recieve,omiempty"` //实时的消息处理数量
 	Groups           map[string][]string           `json:"groups,omitemtpy"`        //实时的消息处理数量
-	KiteServerLimter []int                         `json:"accpet_limiter,omiempty"`
+	KiteServerLimter []int                         `json:"accept_limiter,omiempty"`
 	LimterPercent    int                           `json:"-"`
 }
 
