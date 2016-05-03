@@ -39,7 +39,7 @@ type KiteQStat struct {
 	TopicsDeliver    map[string] /*topicId*/ int32 `json:"topics_deliver"` //实时的消息处理数量
 	TopicsRecieve    map[string] /*topicId*/ int32 `json:"topics_recieve"` //实时的消息处理数量
 	Groups           map[string][]string           `json:"groups"`
-	KiteServerLimter []int                         `json:"accpet_limiter,omitemtpy"`
+	KiteServerLimter []int                         `json:"accept_limiter,omitemtpy"`
 }
 
 //network stat
