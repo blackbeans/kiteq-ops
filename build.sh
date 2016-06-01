@@ -1,12 +1,17 @@
 #!/bin/bash
 
+cp -rf vendor ../ 
+
+go get github.com/revel/cmd/revel
+
 #go get github.com/revel/revel
-#go get github.com/revel/cmd/revel
+
 #go get github.com/revel/modules/jobs/app/jobs
 #go get github.com/blackbeans/log4go
 #go get github.com/blackbeans/go-zookeeper/zk
 #go get gopkg.in/mgo.v2
 #go get github.com/robfig/cron
+#go golang.org/x/net/websocket
 
 
 
