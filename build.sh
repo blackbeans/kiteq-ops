@@ -1,8 +1,5 @@
 #!/bin/bash
 
-cp -rf vendor/* ../ 
-
-export PATH=$PATH:$GOPATH/bin
 
 go get github.com/revel/revel
 go get github.com/revel/cmd/revel
@@ -18,7 +15,7 @@ rm -f kiteq-ops.tar.gz
 echo "-------------GOPATH:$GOPATH-----------------------"
 echo "------------remove old package--------------"
 
-revel package kiteq-ops 
+$GOPATH/bin/revel package kiteq-ops 
 
 mkdir tmp
 tar -zxvf kiteq-ops.tar.gz -C tmp/
