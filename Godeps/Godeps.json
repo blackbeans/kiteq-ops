@@ -18,6 +18,16 @@
 			"Rev": "a3e8667bde659648ee7ada0a544bf466910fc1f7"
 		},
 		{
+			"ImportPath": "github.com/revel/cmd/harness",
+			"Comment": "v0.12.0",
+			"Rev": "a7b72c9afbff471c8c6c579f3b63780d2c478b12"
+		},
+		{
+			"ImportPath": "github.com/revel/cmd/revel",
+			"Comment": "v0.12.0",
+			"Rev": "a7b72c9afbff471c8c6c579f3b63780d2c478b12"
+		},
+		{
 			"ImportPath": "github.com/revel/modules/jobs/app/jobs",
 			"Comment": "v0.12.0",
 			"Rev": "3589d5bf1d1b6da10a88c53701db2af12dfc0811"
