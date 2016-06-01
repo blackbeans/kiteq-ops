@@ -2,19 +2,15 @@
 
 cp -rf vendor/* ../ 
 
+export PATH=$PATH:$GOPATH/bin
 
-
-go get github.com/revel/cmd/revel
 go get github.com/revel/revel
+go get github.com/revel/cmd/revel
 go get github.com/revel/modules/jobs/app/jobs
 go get github.com/blackbeans/log4go
 go get github.com/blackbeans/go-zookeeper/zk
 go get gopkg.in/mgo.v2
 go get github.com/robfig/cron
-go get github.com/revel/modules/static/app/controllers
-go get golang.org/x/net/websocket
-go get github.com/revel/modules/testrunner/app/controllers
-
 
 
 cd ..
@@ -22,7 +18,7 @@ rm -f kiteq-ops.tar.gz
 echo "-------------GOPATH:$GOPATH-----------------------"
 echo "------------remove old package--------------"
 
-$GOPATH/bin/revel package kiteq-ops 
+revel package kiteq-ops 
 
 mkdir tmp
 tar -zxvf kiteq-ops.tar.gz -C tmp/
