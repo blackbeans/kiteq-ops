@@ -132,6 +132,7 @@
                 </tr> 
                 {{end}}
                 <tr><td colspan=2><h3>连接分组</h3></td></tr>
+          
                 {{range $k,$v :=.stats.KiteQ.Groups}}  
                 <tr>
                     <!-- groupid -->
@@ -139,8 +140,11 @@
                     <td>
                         <table width="100%">
                             <tr>
-                            {{range $v}}
-                                <td><button class="btn btn-primary" data-toggle="modal" data-target="">{{.}}</button></td>
+                            {{range $i,$e := $v}}
+                            {{if $i % 5 == 0}}
+                            </td>
+                            {{end}}
+                                <td><button class="btn btn-primary" data-toggle="modal" data-target="">{{$e}}</button></td>
                             {{end}}
                             </tr>
                         </table>
