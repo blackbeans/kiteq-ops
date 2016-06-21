@@ -88,11 +88,10 @@
                         <table width="100%">
                             {{range $v}}
                             <tr>
-                                <!-- <td>{{.}}&nbsp;&nbsp;<a href="/kiteq/delsub?apName={{$.apName}}&group={{.}}&topic={{$k}}">删除</a></td> -->
          
                                 <!-- 删除确认框 -->
                                 <td width="30%">{{.GroupId}}<div class="progress" style="height: 30px;"><div  class="progress-bar progress-bar-success" style="width:{{.Percent}}%" >{{index .Limiter 0}}/{{index .Limiter 1}}</div></div></td>
-                                <td><div style="height: 30px;margin-bottom: 20px;margin-left:20px"><button class="btn btn-danger "  style="height: 30px;" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.GroupId}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.GroupId}}_{{$k}}">删除</button>
+                                <td><div style="height: 40px;margin-bottom: 20px;margin-left:20px"><button class="btn btn-danger "   style="height: 40px;" data-href="/kiteq/delsub?apName={{$.apName}}&group={{.GroupId}}&topic={{$k}}" data-toggle="modal" data-target="#myModal_{{.GroupId}}_{{$k}}">删除</button>
                                 </div></td>
                                 <!-- 模态框（Modal） -->
                                 <div class="modal fade" id="myModal_{{.GroupId}}_{{$k}}" tabindex="-1" role="dialog" 
@@ -132,32 +131,36 @@
                 </tr> 
                 {{end}}
                 <tr><td colspan=2><h3>连接分组</h3></td></tr>
-          
-                {{range $k,$v :=.stats.KiteQ.Groups}}  
                 <tr>
                     <!-- groupid -->
                    <td colspan=2>
-                       <div style="height: 30px;margin-bottom: 20px;margin-left:20px">
-                           <button class="btn btn-danger "  style="height: 30px;"  data-toggle="modal" data-target="#conn_modal_{{$k}}">{{$k}}</button>
-                        </div>
+                    <div>
+                    {{range $k,$v :=.stats.KiteQ.Groups}}  
+                        <button class="btn btn-default" style="height: 40px;"  data-toggle="modal" data-target="#conn_modal_{{$k}}">{{$k}}</button>&nbsp;
                         <!-- 模态框（Modal） -->
-                        <div class="modal fade" id="conn_modal_{{$k}}" tabindex="-1" role="dialog" 
-                                aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="conn_modal_{{$k}}"tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="myModalLabel">{{$k}}</h4>
-                                    </div>
-                                <div class="modal-body">
-                                    {{range _,$e := $v}}
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="">{{$e}}</button>
-                                    {{end}}
-                                </div>
-                            </div>
-                        </div>
+                          <div class="modal-content">
+                             <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">{{$k}}</h4>
+                             </div>
+                             <div class="modal-body">
+                                {{range $e := $v}}
+                                    <span >{{$e}}&nbsp;</span>
+                                {{end}}
+                             </div>
+                             <div class="modal-footer">
+                                <button type="button" class="btn btn-default" 
+                                   data-dismiss="modal">关闭
+                                </button>
+                             </div>
+                          </div> 
+                        </div> 
+                    </div>
+                     {{end}} 
+                    </div>   
                     </td>
-                </tr> 
-                {{end}}       
+                </tr>
             </table>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
