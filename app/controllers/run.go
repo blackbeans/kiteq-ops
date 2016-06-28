@@ -22,7 +22,9 @@ func init() {
 			panic(err)
 		}
 
-		alarmManager := alarm.NewAlarmManager(10)
+		alarmUrl := revel.Config.StringDefault("alarm.url", "")
+
+		alarmManager := alarm.NewAlarmManager(10, alarmUrl)
 		go alarmManager.Start()
 
 		//初始化kiteqServer

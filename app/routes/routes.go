@@ -4,6 +4,18 @@ package routes
 import "github.com/revel/revel"
 
 
+type tHome struct {}
+var Home tHome
+
+
+func (_ tHome) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Home.Index", args).Url
+}
+
+
 type tKiteQ struct {}
 var KiteQ tKiteQ
 
@@ -53,15 +65,15 @@ func (_ tKiteQ) HourChart(
 }
 
 
-type tHome struct {}
-var Home tHome
+type tJobs struct {}
+var Jobs tJobs
 
 
-func (_ tHome) Index(
+func (_ tJobs) Status(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Home.Index", args).Url
+	return revel.MainRouter.Reverse("Jobs.Status", args).Url
 }
 
 
@@ -91,18 +103,6 @@ func (_ tStatic) ServeModule(
 	revel.Unbind(args, "prefix", prefix)
 	revel.Unbind(args, "filepath", filepath)
 	return revel.MainRouter.Reverse("Static.ServeModule", args).Url
-}
-
-
-type tJobs struct {}
-var Jobs tJobs
-
-
-func (_ tJobs) Status(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("Jobs.Status", args).Url
 }
 
 

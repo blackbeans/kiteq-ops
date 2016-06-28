@@ -136,13 +136,13 @@
                    <td colspan=2>
                     <div>
                     {{range $k,$v :=.stats.KiteQ.Groups}}  
-                        <button class="btn btn-default" style="height: 40px;"  data-toggle="modal" data-target="#conn_modal_{{$k}}">{{$k}}</button>&nbsp;
+                        <button class="btn btn-default" style="height: 40px;"  data-toggle="modal" data-target="#conn_modal_{{$k}}">{{$k}}({{len $v}})</button>&nbsp;
                         <!-- 模态框（Modal） -->
                         <div class="modal fade" id="conn_modal_{{$k}}"tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                              <div class="modal-header">
-                            <h4 class="modal-title" id="myModalLabel">{{$k}}</h4>
+                            <h4 class="modal-title" id="myModalLabel">{{$k}}({{len $v}})</h4>
                              </div>
                              <div class="modal-body">
                                 {{range $e := $v}}
