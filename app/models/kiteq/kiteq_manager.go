@@ -5,6 +5,7 @@ import (
 	log "github.com/blackbeans/log4go"
 	"kiteq-ops/app/models/alarm"
 	"kiteq-ops/app/zk"
+	"net"
 	"sort"
 	"strconv"
 	"strings"
@@ -239,7 +240,13 @@ func (self *KiteQManager) NodeChange(path string, eventType zk.ZkEvent, children
 					}
 					v.Alive = alive
 					if !alive {
-						deadQs = append(deadQs, v.HostPort)
+						tmp := v.HostPort
+						ip := strings.Split(v.HostPort, ":")
+						ipAddr, err := net.LookupHost(ip[0])
+						if nil == err {
+							tmp = ipAddr[0] + ":" + ip[1]
+						}
+						deadQs = append(deadQs, tmp)
 					}
 				}
 				dlqAlarm := "KiteQ-Down["
@@ -252,7 +259,7 @@ func (self *KiteQManager) NodeChange(path string, eventType zk.ZkEvent, children
 					}
 				}
 				if len(deadQs) > 0 {
-					self.alarmManager.SendAlarm(&alarm.Alarm{"", "bibi-kiteq",
+					self.alarmManager.SendAlarm(&alarm.Alarm{"", "kiteq",
 						dlqAlarm,
 						0, 0, 3})
 				}

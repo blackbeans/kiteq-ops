@@ -1,10 +1,10 @@
 package kiteq
 
 import (
-	"kiteq-ops/app/models"
-	"kiteq-ops/app/models/alarm"
 	"fmt"
 	"github.com/revel/revel"
+	"kiteq-ops/app/models"
+	"kiteq-ops/app/models/alarm"
 	"time"
 )
 
@@ -43,14 +43,14 @@ func (m KiteqJobMinute) Run() {
 		}
 
 		for t, count := range monitor.KiteQ.MessageCount {
-			if count >= 2000 {
+			if count >= 5000 {
 				dlqAlarm += fmt.Sprintf("DelayMessage[%s:%d>2000]", t, count)
 			}
 		}
 
 		//如果有告警，发出告警
 		if len(dlqAlarm) > 0 && nil != m.Alarm {
-			m.Alarm.SendAlarm(&alarm.Alarm{node.HostPort, "bibi-kiteq",
+			m.Alarm.SendAlarm(&alarm.Alarm{node.HostPort, "kiteq",
 				dlqAlarm,
 				0, 0, 3})
 		}
