@@ -12,11 +12,11 @@
     
 #### 安装：
     
-    [revel安装](http://revel.github.io/tutorial/gettingstarted.html)
+[revel安装](http://revel.github.io/tutorial/gettingstarted.html)
     
-    sh build.sh
+sh build.sh
 
-    revel run kiteq-ops
+revel run kiteq-ops
 
 #### demo
 
