@@ -31,7 +31,7 @@ func (self *Alarm) WrapAlaramParams(alarmUrl string) string {
 	}
 	self.Level = 2
 
-	self.Timestamp = time.Now().UnixNano() / 1000
+	self.Timestamp = time.Now().UnixNano() / 1000 / 1000
 	buff := make([]byte, 0, 128)
 	s := bytes.NewBuffer(buff)
 	s.WriteString(alarmUrl)
