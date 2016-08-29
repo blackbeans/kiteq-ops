@@ -35,6 +35,7 @@ type AlarmManager struct {
 func NewAlarmManager(gocount int, alarmUrl string, consumer *client.MoaConsumer) *AlarmManager {
 	alarm := &AlarmManager{alarmChannel: make(chan *Alarm, gocount*2),
 		alarmGo:  make(chan bool, gocount),
+		monitorDataChannel:make(chan MonitorData,100)
 		alarmUrl: alarmUrl}
 
 	hubbleService := consumer.GetService("/service/hubble-data-service").(*IHubbleDataService)
