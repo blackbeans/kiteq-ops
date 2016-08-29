@@ -14,7 +14,6 @@ type MonitorData struct {
 	Host            string         `json:"host"`
 	Action          string         `json:"action"`
 	DeliverGo       int            `json:"deliver_go"`
-	DeliverCount    int            `json:"deliver_count"`
 	DelayMessage    map[string]int `json:"delay_message"`
 	DeliveryMessage map[string]int `json:"delviver_message"`
 }

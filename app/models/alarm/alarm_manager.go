@@ -83,7 +83,6 @@ func (self *AlarmManager) Start() {
 			data := <-self.monitorDataChannel
 			records := make(map[string]int, 5)
 			records["deliver_go"] = data.DeliverGo
-			records["deliver_count"] = data.DeliverCount
 			for t, v := range data.DelayMessage {
 				records["delay_"+t] = v
 			}

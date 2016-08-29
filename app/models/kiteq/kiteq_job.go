@@ -50,8 +50,6 @@ func (m KiteqJobMinute) Run() {
 		for t, count := range monitor.KiteQ.TopicsDeliver {
 			monitorData.DeliveryMessage[t] = int(count)
 		}
-
-		monitorData.DeliverCount = int(monitor.KiteQ.DeliverCount)
 		//发送统计结果
 		m.Alarm.SendAlarmData(monitorData)
 	}
