@@ -34,9 +34,9 @@ type AlarmManager struct {
 
 func NewAlarmManager(gocount int, alarmUrl string, consumer *client.MoaConsumer) *AlarmManager {
 	alarm := &AlarmManager{alarmChannel: make(chan *Alarm, gocount*2),
-		alarmGo:  make(chan bool, gocount),
-		monitorDataChannel:make(chan MonitorData,100)
-		alarmUrl: alarmUrl}
+		alarmGo:            make(chan bool, gocount),
+		monitorDataChannel: make(chan MonitorData, 100),
+		alarmUrl:           alarmUrl}
 
 	hubbleService := consumer.GetService("/service/hubble-data-service").(*IHubbleDataService)
 	alarm.hubbleService = hubbleService
@@ -87,8 +87,11 @@ func (self *AlarmManager) Start() {
 			for t, v := range data.DelayMessage {
 				records["delay_"+t] = v
 			}
-
-			self.hubbleService.SendMonitorDataWithTimestamp(data.Action, data.Host, records, time.Now().UnixNano()/1000/1000)
+			log.InfoLog("alarm", "AlarmManager|SEND|MonitorData|BEGIN|%v", records)
+			self.hubbleService.
+				SendMonitorDataWithTimestamp(data.Action, data.Host,
+					records, time.Now().UnixNano()/1000/1000)
+			log.InfoLog("alarm", "AlarmManager|SEND|MonitorData|END...")
 		}()
 	}
 }
