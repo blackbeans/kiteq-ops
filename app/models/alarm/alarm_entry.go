@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+type MonitorData struct {
+	Host         string         `json:"host"`
+	Action       string         `json:"action"`
+	DeliverGo    int            `json:"deliver_go"`
+	DelayMessage map[string]int `json:"delay_message"`
+}
+
 type Alarm struct {
 	Host      string `tag:"host"`
 	Action    string `tag:"action"`
@@ -22,6 +29,11 @@ type Alarm struct {
 func (self Alarm) String() string {
 	b, _ := json.Marshal(self)
 	return string(b)
+}
+
+func HostName() string {
+	hostname, _ := os.Hostname()
+	return hostname
 }
 
 func (self *Alarm) WrapAlaramParams(alarmUrl string) string {

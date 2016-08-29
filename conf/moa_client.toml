@@ -1,0 +1,41 @@
+
+#当前使用的环境
+[env]
+name="kiteq-ops"
+appSecretKey="123"
+runMode="online"
+#可以是momokeeper或者zookeeper
+registryType="momokeeper" 
+#service Uri的后缀可以为空
+serviceUriSuffix=""
+
+
+#registry的管理	
+[registry]
+	[registry.dev]
+		#hosts="localhost:2181"
+		hosts="test_moa_admin.momo.com:10020,test_moa_lookup.momo.com:10010"
+	[registry.online]
+		hosts="moa_admin.momo.com:10020,moa_lookup.momo.com:10010" 
+
+#cluster的服务器
+[clusters]
+	[clusters.dev]
+		#env=dev/online
+		env="dev" 
+		processTimeout=1
+		#每个机器的连接数量
+		poolSizePerHost = 5
+		logFile="log/log_test.xml"
+		#连接选择方式random或ketama
+		selectorStrategy="ketama"
+	[clusters.online]
+		#env=dev/online
+		env="online" 
+		processTimeout=1
+		#每个机器的连接数量
+		poolSizePerHost = 5
+		logFile="log/log.xml"
+		#连接选择方式random或ketama
+		selectorStrategy="ketama"
+

@@ -31,6 +31,10 @@ func (m KiteqJobMinute) Run() {
 	now := time.Unix(timestamp-timestamp%60, 0)
 	for _, node := range nodes {
 
+		monitorData := alarm.MonitorData{}
+		monitorData.Action = "kiteq"
+		monitorData.Host = node.HostPort
+
 		monitor := m.Manager.QueryNodeConfig(node.HostPort)
 		monitorstat := Record{node.HostPort,
 			*monitor,
@@ -41,12 +45,17 @@ func (m KiteqJobMinute) Run() {
 		if monitor.KiteQ.DeliverGo >= 6000 {
 			dlqAlarm += fmt.Sprintf("DeliverGo[%d>=6000],", monitor.KiteQ.DeliverGo)
 		}
-
+		monitorData.DeliverGo = int(monitor.KiteQ.DeliverGo)
+		monitorData.DelayMessage = make(map[string]int, 10)
 		for t, count := range monitor.KiteQ.MessageCount {
 			if count >= 5000 {
-				dlqAlarm += fmt.Sprintf("DelayMessage[%s:%d>2000]", t, count)
+				dlqAlarm += fmt.Sprintf("DelayMessage[%s:%d>5000]", t, count)
 			}
+			monitorData.DelayMessage[t] = int(count)
 		}
+
+		//发送统计结果
+		m.Alarm.SendAlarmData(monitorData)
 
 		//如果有告警，发出告警
 		if len(dlqAlarm) > 0 && nil != m.Alarm {
