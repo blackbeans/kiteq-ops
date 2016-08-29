@@ -26,7 +26,7 @@ serviceUriSuffix=""
 		processTimeout=1
 		#每个机器的连接数量
 		poolSizePerHost = 5
-		logFile="log/log_test.xml"
+		logFile="./log/log_test.xml"
 		#连接选择方式random或ketama
 		selectorStrategy="ketama"
 	[clusters.online]
@@ -35,7 +35,7 @@ serviceUriSuffix=""
 		processTimeout=1
 		#每个机器的连接数量
 		poolSizePerHost = 5
-		logFile="log/log.xml"
+		logFile="./log/log.xml"
 		#连接选择方式random或ketama
 		selectorStrategy="ketama"
 

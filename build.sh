@@ -19,6 +19,7 @@ $GOPATH/bin/revel package kiteq-ops
 mkdir tmp
 tar -zxvf kiteq-ops.tar.gz -C tmp/
 cp -rf kiteq-ops/log tmp/
+cp -rf kiteq-ops/conf tmp/
 
 cd tmp
 tar -zcvf kiteq-ops.tar.gz .
