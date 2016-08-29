@@ -46,6 +46,7 @@ func (m KiteqJobMinute) Run() {
 			monitorData.DelayMessage[t] = int(count)
 		}
 		//投递值
+		monitorData.DeliveryMessage = make(map[string]int, 10)
 		for t, count := range monitor.KiteQ.TopicsDeliver {
 			monitorData.DeliveryMessage[t] = int(count)
 		}
