@@ -1,7 +1,6 @@
 package kiteq
 
 import (
-	"fmt"
 	"github.com/revel/revel"
 	"kiteq-ops/app/models"
 	"kiteq-ops/app/models/alarm"
@@ -40,29 +39,20 @@ func (m KiteqJobMinute) Run() {
 			*monitor,
 			now}
 		monitorstats = append(monitorstats, monitorstat)
-		//如果收集的投递协程数大于6000设置为8000则报警
-		dlqAlarm := ""
-		if monitor.KiteQ.DeliverGo >= 6000 {
-			dlqAlarm += fmt.Sprintf("DeliverGo[%d>=6000],", monitor.KiteQ.DeliverGo)
-		}
+
 		monitorData.DeliverGo = int(monitor.KiteQ.DeliverGo)
 		monitorData.DelayMessage = make(map[string]int, 10)
 		for t, count := range monitor.KiteQ.MessageCount {
-			if count >= 5000 {
-				dlqAlarm += fmt.Sprintf("DelayMessage[%s:%d>5000]", t, count)
-			}
 			monitorData.DelayMessage[t] = int(count)
 		}
+		//投递值
+		for t, count := range monitor.KiteQ.TopicsDeliver {
+			monitorData.DeliveryMessage[t] = int(count)
+		}
 
+		monitorData.DeliverCount = int(monitor.KiteQ.DeliverCount)
 		//发送统计结果
 		m.Alarm.SendAlarmData(monitorData)
-
-		//如果有告警，发出告警
-		if len(dlqAlarm) > 0 && nil != m.Alarm {
-			m.Alarm.SendAlarm(&alarm.Alarm{node.HostPort, "KiteQ-Server",
-				dlqAlarm,
-				0, 0, 3})
-		}
 	}
 
 	if len(monitorstats) == 0 {
