@@ -32,7 +32,7 @@ func (m KiteqJobMinute) Run() {
 	for _, node := range nodes {
 
 		monitorData := alarm.MonitorData{}
-		monitorData.Action = "kiteq"
+		monitorData.Action = "KiteQ-Server"
 		monitorData.Host = node.HostPort
 
 		monitor := m.Manager.QueryNodeConfig(node.HostPort)
@@ -59,7 +59,7 @@ func (m KiteqJobMinute) Run() {
 
 		//如果有告警，发出告警
 		if len(dlqAlarm) > 0 && nil != m.Alarm {
-			m.Alarm.SendAlarm(&alarm.Alarm{node.HostPort, "kiteq",
+			m.Alarm.SendAlarm(&alarm.Alarm{node.HostPort, "KiteQ-Server",
 				dlqAlarm,
 				0, 0, 3})
 		}
