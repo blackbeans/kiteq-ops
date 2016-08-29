@@ -73,15 +73,22 @@ func (self *AlarmManager) Start() {
 
 	//发送数据
 	for {
-		data := <-self.monitorDataChannel
-		records := make(map[string]int, 5)
-		records["deliver_go"] = data.DeliverGo
+		func() {
+			defer func() {
+				if err := recover(); nil != err {
 
-		for t, v := range data.DelayMessage {
-			records["delay_"+t] = v
-		}
+				}
+			}()
+			data := <-self.monitorDataChannel
+			records := make(map[string]int, 5)
+			records["deliver_go"] = data.DeliverGo
 
-		self.hubbleService.SendMonitorDataWithTimestamp(data.Action, data.Host, records, time.Now().UnixNano()/1000/1000)
+			for t, v := range data.DelayMessage {
+				records["delay_"+t] = v
+			}
+
+			self.hubbleService.SendMonitorDataWithTimestamp(data.Action, data.Host, records, time.Now().UnixNano()/1000/1000)
+		}()
 	}
 }
 
