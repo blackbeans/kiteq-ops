@@ -91,11 +91,11 @@ func (self *AlarmManager) Start() {
 				records["deliver_"+t] = v
 			}
 
-			log.InfoLog("alarm", "AlarmManager|SEND|MonitorData|BEGIN|%v", records)
+			log.InfoLog("alarm", "AlarmManager|SEND|MonitorData|BEGIN|%s|%s%v",
+				data.Action, data.Host, records)
 			self.hubbleService.
 				SendMonitorDataWithTimestamp(data.Action, data.Host,
 					records, time.Now().UnixNano()/1000/1000)
-			log.InfoLog("alarm", "AlarmManager|SEND|MonitorData|END...")
 		}()
 	}
 }
