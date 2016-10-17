@@ -14,6 +14,7 @@ import (
 
 const (
 	KITEQ               = "/kiteq"
+	KITEQ_TOPIC_SERVER  = "/kiteq/server"
 	KITEQ_ALL_SERVERS   = KITEQ + "/all_servers"
 	KITEQ_ALIVE_SERVERS = KITEQ + "/alive_servers"
 	KITEQ_SUB           = KITEQ + "/sub" // 持久订阅/或者临时订阅 # /kiteq/sub/${topic}/${groupId}-bind/#$data(bind)
@@ -23,20 +24,25 @@ const (
 * kiteq的Queue的管理
  */
 type KiteQManager struct {
-	zkSession    *zk.ZkSession
-	lockAp       sync.RWMutex
-	kiteqs       map[string]KiteQ
-	alarmManager *alarm.AlarmManager
+	zkSession     *zk.ZkSession
+	lockAp        sync.RWMutex
+	kiteqs        map[string]KiteQ
+	topic2Servers map[string] /*topic*/ []string
+	bind2Group    map[string] /*topic*/ []string
+	alarmManager  *alarm.AlarmManager
 }
 
 func NewKiteQManager(session *zk.ZkSession, am *alarm.AlarmManager) *KiteQManager {
 	manager := &KiteQManager{
-		lockAp:       sync.RWMutex{},
-		kiteqs:       make(map[string]KiteQ, 10),
-		alarmManager: am}
+		lockAp:        sync.RWMutex{},
+		kiteqs:        make(map[string]KiteQ, 10),
+		topic2Servers: make(map[string][]string, 10),
+		bind2Group:    make(map[string][]string, 10),
+		alarmManager:  am}
 	//注册kiteqserver路径的mangager
 	session.RegisterWatcher(KITEQ_ALL_SERVERS, manager)
 	session.RegisterWatcher(KITEQ_ALIVE_SERVERS, manager)
+	session.RegisterWatcher(KITEQ_TOPIC_SERVER, manager)
 	manager.zkSession = session
 	//加载数据
 	manager.load()
@@ -79,6 +85,32 @@ func (self *KiteQManager) load() {
 		}
 		log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
 	}
+
+	//加载topic对应的server
+	topics, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER)
+	if nil != err {
+		log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|FAIL|%s|%s|%s", KITEQ_ALIVE_SERVERS, err, alives)
+	} else {
+		for _, t := range topics {
+			//pullServer
+			servers, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER + "/" + t)
+			if nil != err {
+				log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|FAIL|%s|%s", KITEQ_TOPIC_SERVER+"/"+t, err)
+				continue
+			}
+			self.topic2Servers[t] = servers
+
+			//pull topic2bindGroup
+			groups, err := self.zkSession.PullNodesAndWatch(KITEQ_SUB + "/" + t)
+			if nil != err {
+				continue
+			}
+			self.bind2Group[t] = groups
+			log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|%s|%v|%v", t, groups, self.topic2Servers)
+		}
+		log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
+	}
+
 }
 
 /*
@@ -93,6 +125,31 @@ func (self *KiteQManager) QueryNodes() []KiteQ {
 	}
 
 	sort.Sort(KiteQs(kiteqs))
+	return kiteqs
+
+}
+
+/*
+*查询所有的节点
+ */
+func (self *KiteQManager) QueryTopic2BindGroupsNodes(topic string) []string {
+	self.lockAp.RLock()
+	defer self.lockAp.RUnlock()
+	groups, _ := self.bind2Group[topic]
+	return groups
+
+}
+
+/*
+*查询所有的节点
+ */
+func (self *KiteQManager) QueryTopicsNodes() map[string][]string {
+	kiteqs := make(map[string][]string, 10)
+	self.lockAp.RLock()
+	defer self.lockAp.RUnlock()
+	for k, v := range self.topic2Servers {
+		kiteqs[k] = v
+	}
 	return kiteqs
 
 }

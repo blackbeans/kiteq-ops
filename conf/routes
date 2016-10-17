@@ -3,7 +3,8 @@
 # ~~~~
 module:jobs
 
-GET 	/                           			KiteQ.Kiteqs
+GET 	/                          	            Home.Index
+GET 	/kiteq/index                           	Home.Index
 GET 	/kiteq                           		KiteQ.Kiteqs
 GET 	/kiteq/delsub                           KiteQ.DelSubscribe
 
