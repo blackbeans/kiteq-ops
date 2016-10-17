@@ -10,13 +10,14 @@
             </ul>
         </div>
 
-
+        
         <!--topic机器列表-->
-        <div id="topic_{{.topic}}" style="height:800px;">
+        <div id="topic_{{.topic}}" style="height:400px;">
             
         </div>
+
         <!--trade的订阅分组-->
-        <div id="topic_{{.topic}}_bind" style="height:200px">
+        <div id="topic_{{.topic}}_bind" style="height:300px">
             
         </div>
       
@@ -58,7 +59,7 @@
                             nodePadding: 20,
                             layerPadding: 200,
                             hoverable: true,
-                            roam: false,
+                            roam: true,
                             symbolSize: 6,
                             itemStyle: {
                                 normal: {
@@ -115,7 +116,7 @@
                             nodePadding: 20,
                             layerPadding: 200,
                             hoverable: true,
-                            roam: false,
+                            roam: true,
                             symbolSize: 6,
                             itemStyle: {
                                 normal: {
@@ -138,7 +139,7 @@
                                 emphasis: {
                                     color: '#4883b4',
                                     label: {
-                                        show: true
+                                        show: false
                                     },
                                     borderWidth: 1
                                 }
