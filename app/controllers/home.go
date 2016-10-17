@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	// "fmt"
 	"encoding/json"
+	"fmt"
 	"github.com/revel/revel"
 	"sort"
 )
@@ -41,13 +41,7 @@ func (c Home) Index(topic string) revel.Result {
 		stats := kiteqManager.QueryNodeConfig(s)
 		for g, ips := range stats.KiteQ.Groups {
 			serverNode := TopicServer{}
-			serverNode.Name = g
-			serverNode.Children = make([]TopicServer, 0, 1)
-			for _, ip := range ips {
-				ipNode := TopicServer{}
-				ipNode.Name = ip
-				serverNode.Children = append(serverNode.Children, ipNode)
-			}
+			serverNode.Name = fmt.Sprintf("%s(%d)", g, len(ips))
 			tmp.Children = append(tmp.Children, serverNode)
 		}
 
