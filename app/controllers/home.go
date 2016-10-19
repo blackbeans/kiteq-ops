@@ -36,7 +36,6 @@ func (c Home) Index(topic string) revel.Result {
 	for _, s := range servers {
 		tmp := TopicServer{}
 		tmp.Name = s
-		tmp.Children = make([]TopicServer, 0, 1)
 
 		stats := kiteqManager.QueryNodeConfig(s)
 		for g, ips := range stats.KiteQ.Groups {
@@ -45,6 +44,9 @@ func (c Home) Index(topic string) revel.Result {
 			tmp.Children = append(tmp.Children, serverNode)
 		}
 
+		tmp.Children = make([]TopicServer, 0, 1)
+		tmp.Name = fmt.Sprintf("%s(%d)", s, len(tmp.Children))
+
 		ts.Children = append(ts.Children, tmp)
 	}
 
@@ -52,6 +54,19 @@ func (c Home) Index(topic string) revel.Result {
 	result = append(result, ts)
 	data, _ := json.Marshal(result)
 	treeData := string(data)
+
+	return c.Render(topics, topic, treeData)
+}
+
+func (c Home) Bind(topic string) revel.Result {
+
+	nodes := kiteqManager.QueryTopicsNodes()
+
+	topics := make([]string, 0, 10)
+	for k, _ := range nodes {
+		topics = append(topics, k)
+	}
+	sort.Strings(topics)
 
 	//订阅关系
 	groups := kiteqManager.QueryTopic2BindGroupsNodes(topic)
@@ -68,6 +83,6 @@ func (c Home) Index(topic string) revel.Result {
 	resultBind := make([]TopicServer, 0, 1)
 	resultBind = append(resultBind, topic2BindGroups)
 	dataBind, _ := json.Marshal(resultBind)
-	treeDataBind := string(dataBind)
-	return c.Render(topics, topic, treeData, treeDataBind)
+	treeData := string(dataBind)
+	return c.Render(topics, topic, treeData)
 }

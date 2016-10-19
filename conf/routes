@@ -5,6 +5,7 @@ module:jobs
 
 GET 	/                          	            Home.Index
 GET 	/kiteq/index                           	Home.Index
+GET 	/kiteq/index/bind                       Home.Bind
 GET 	/kiteq                           		KiteQ.Kiteqs
 GET 	/kiteq/delsub                           KiteQ.DelSubscribe
 

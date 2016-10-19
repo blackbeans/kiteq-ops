@@ -8,16 +8,17 @@
                 <li><a href="/kiteq/index?topic={{.}}">{{.}}</a></li>
                 {{end}}
             </ul>
+             <ul class="nav nav-sidebar">
+                <li>订阅分组</li>
+                {{range .topics}}
+                <li><a href="/kiteq/index/bind?topic={{.}}">{{.}}</a></li>
+                {{end}}
+            </ul>
         </div>
 
         
         <!--topic机器列表-->
-        <div id="topic_{{.topic}}" style="height:400px;">
-            
-        </div>
-
-        <!--trade的订阅分组-->
-        <div id="topic_{{.topic}}_bind" style="height:300px">
+        <div id="topic_{{.topic}}" style="height:600px;">
             
         </div>
       
@@ -36,13 +37,12 @@
             function (ec) {
                 // 基于准备好的dom，初始化echarts图表
                 var myChart = ec.init(document.getElementById('topic_{{.topic}}'));
-                var bindChart = ec.init(document.getElementById('topic_{{.topic}}_bind'));
                 var  option = {
                     title : {
                         text: '{{.topic}}'
                     },
                     toolbox: {
-                        show : true,
+                        show : false,
                         feature : {
                             mark : {show: true},
                             dataView : {show: false, readOnly: true},
@@ -55,10 +55,10 @@
                             name:'树图',
                             type:'tree',
                             orient: 'horizontal',  // vertical horizontal
-                            rootLocation: {x: 400,y: 130}, // 根节点位置  {x: 100, y: 'center'}
+                            rootLocation: {x: 400,y: 300}, // 根节点位置  {x: 100, y: 'center'}
                             nodePadding: 20,
                             layerPadding: 200,
-                            hoverable: true,
+                            hoverable: false,
                             roam: true,
                             symbolSize: 6,
                             itemStyle: {
@@ -94,67 +94,8 @@
                     ]
                 };
 
-                 var  optionBind = {
-                    title : {
-                        text: '{{.topic}}'
-                    },
-                    toolbox: {
-                        show : false,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: true},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    series : [
-                        {
-                            name:'树图',
-                            type:'tree',
-                            orient: 'horizontal',  // vertical horizontal
-                            rootLocation: {x: 400,y: 130}, // 根节点位置  {x: 100, y: 'center'}
-                            nodePadding: 20,
-                            layerPadding: 200,
-                            hoverable: true,
-                            roam: true,
-                            symbolSize: 6,
-                            itemStyle: {
-                                normal: {
-                                    color: '#4883b4',
-                                    label: {
-                                        show: true,
-                                        position: 'left',
-                                        formatter: "{b}",
-                                        textStyle: {
-                                            color: '#000',
-                                            fontSize: 5
-                                        }
-                                    },
-                                    lineStyle: {
-                                        color: '#ccc',
-                                        type: 'curve' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
-
-                                    }
-                                },
-                                emphasis: {
-                                    color: '#4883b4',
-                                    label: {
-                                        show: false
-                                    },
-                                    borderWidth: 1
-                                }
-                            },
-                            
-                            data: eval({{raw .treeDataBind}})
-                            
-                        }
-                    ]
-                };
-
                 // 为echarts对象加载数据 
                 myChart.setOption(option); 
-                // 为echarts对象加载数据 
-                bindChart.setOption(optionBind); 
             }
     );
 
