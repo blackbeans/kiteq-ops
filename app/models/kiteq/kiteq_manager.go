@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -43,6 +44,7 @@ func NewKiteQManager(session *zk.ZkSession, am *alarm.AlarmManager) *KiteQManage
 	session.RegisterWatcher(KITEQ_ALL_SERVERS, manager)
 	session.RegisterWatcher(KITEQ_ALIVE_SERVERS, manager)
 	session.RegisterWatcher(KITEQ_TOPIC_SERVER, manager)
+	session.RegisterWatcher(KITEQ_SUB, manager)
 	manager.zkSession = session
 	//加载数据
 	manager.load()
@@ -86,30 +88,45 @@ func (self *KiteQManager) load() {
 		log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
 	}
 
-	//加载topic对应的server
-	topics, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER)
-	if nil != err {
-		log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|FAIL|%s|%s|%s", KITEQ_ALIVE_SERVERS, err, alives)
-	} else {
-		for _, t := range topics {
-			//pullServer
-			servers, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER + "/" + t)
-			if nil != err {
-				log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|FAIL|%s|%s", KITEQ_TOPIC_SERVER+"/"+t, err)
-				continue
-			}
-			self.topic2Servers[t] = servers
+	//schedule pull server and bind
+	go func() {
+		for {
+			func() {
+				//加载topic对应的server
+				topics, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER)
+				if nil != err {
+					log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|FAIL|%s|%s|%s", KITEQ_ALIVE_SERVERS, err, alives)
+				} else {
+					//do nothing
+					self.lockAp.Lock()
+					defer self.lockAp.Unlock()
 
-			//pull topic2bindGroup
-			groups, err := self.zkSession.PullNodesAndWatch(KITEQ_SUB + "/" + t)
-			if nil != err {
-				continue
-			}
-			self.bind2Group[t] = groups
-			log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|%s|%v|%v", t, groups, self.topic2Servers)
+					for _, t := range topics {
+						//pullServer
+						servers, err := self.zkSession.PullNodesAndWatch(KITEQ_TOPIC_SERVER + "/" + t)
+						if nil != err {
+							log.ErrorLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|FAIL|%s|%s", KITEQ_TOPIC_SERVER+"/"+t, err)
+							continue
+						}
+						self.topic2Servers[t] = servers
+
+						//pull topic2bindGroup
+						groups, err := self.zkSession.PullNodesAndWatch(KITEQ_SUB + "/" + t)
+						if nil != err {
+							continue
+						}
+						self.bind2Group[t] = groups
+						log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|SERVER|%s|%v|%v", t, groups, self.topic2Servers)
+					}
+					log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
+				}
+
+			}()
+			log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
+			time.Sleep(1 * time.Minute)
 		}
-		log.InfoLog("kiteq_manager", "KiteQManager|load|pullNodesAndWatch|ALIVE SERVER|%s|%s", KITEQ_ALIVE_SERVERS, alives)
-	}
+
+	}()
 
 }
 
@@ -253,17 +270,18 @@ func (self *KiteQManager) changes(path string, alive_servers, all_servers func()
 	split := strings.Split(path, "/")
 	//判断路径中类型
 	if strings.Contains(path, "alive_servers") {
-		//inbound
+		//存活的server
 		if len(split) == 3 {
 			alive_servers()
 		}
 
 	} else if strings.Contains(path, "all_servers") {
-		//outbound
+		//所有的server
 		if len(split) == 3 {
 			all_servers()
 		}
 	}
+
 }
 
 //节点发生变更
@@ -271,7 +289,7 @@ func (self *KiteQManager) changes(path string, alive_servers, all_servers func()
 func (self *KiteQManager) NodeChange(path string, eventType zk.ZkEvent, children []string) {
 
 	split := strings.Split(path, "/")
-	if len(split) != 3 {
+	if len(split) < 3 {
 		log.WarnLog("kiteq_manager", "KiteQManager|NodeChange|IGNORE|%s|%s|%s", path, eventType, children)
 		return
 	}
