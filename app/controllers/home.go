@@ -35,8 +35,7 @@ func (c Home) Index(topic string) revel.Result {
 	ts.Children = make([]TopicServer, 0, 10)
 	for _, s := range servers {
 		tmp := TopicServer{}
-		tmp.Name = s
-
+		tmp.Children = make([]TopicServer, 0, 1)
 		stats := kiteqManager.QueryNodeConfig(s)
 		for g, ips := range stats.KiteQ.Groups {
 			serverNode := TopicServer{}
@@ -44,7 +43,6 @@ func (c Home) Index(topic string) revel.Result {
 			tmp.Children = append(tmp.Children, serverNode)
 		}
 
-		tmp.Children = make([]TopicServer, 0, 1)
 		tmp.Name = fmt.Sprintf("%s(%d)", s, len(tmp.Children))
 
 		ts.Children = append(ts.Children, tmp)
